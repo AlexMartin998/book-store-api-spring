@@ -1,11 +1,13 @@
 package com.adrian.bookstoreapi.storage.service;
 
-import com.adrian.bookstoreapi.common.exceptions.BadRequestException;
+import com.adrian.bookstoreapi.common.exceptions.ResourceNotFoundException;
 import com.adrian.bookstoreapi.common.exceptions.StorageException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,8 +20,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 
-@Service("StorageServiceImpl") // to be used with @Qualifier
-public class StorageServiceImpl implements StorageService {
+@Service("FileSystemStorageService") // to be used with @Qualifier
+//@Service
+public class FileSystemStorageService implements StorageService {
 
     @Value("${storage.location}")
     private String storageLocation; // dirname that will store files
@@ -55,11 +58,25 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public Resource loadAsResource(String filename) {
-        return null;
+        try {
+            Path path = Paths.get(storageLocation).resolve(filename);
+            Resource resource = new UrlResource(path.toUri());
+
+            if (resource.exists() || resource.isReadable()) return resource;
+            else throw new RuntimeException();
+        } catch (Exception ex) {
+            throw new ResourceNotFoundException("File", "filename", filename);
+        }
     }
 
     @Override
     public void delete(String filename) {
+        Path path = Paths.get(storageLocation).resolve(filename);
 
+        try {
+            FileSystemUtils.deleteRecursively(path);
+        } catch (IOException e) {
+            // let it happen
+        }
     }
 }
