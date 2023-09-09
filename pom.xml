@@ -8,10 +8,10 @@
 		<version>3.0.10</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.alex</groupId>
-	<artifactId>security</artifactId>
+	<groupId>com.adrian</groupId>
+	<artifactId>bookstoreapi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>security</name>
+	<name>bookstoreapi</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>
@@ -58,6 +58,7 @@
 		</dependency>
 
 
+
 		<!-- Validations DTO/Entity -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -88,8 +89,8 @@
 			<version>0.11.5</version>
 		</dependency>
 
-
 	</dependencies>
+
 
 	<build>
 		<plugins>
