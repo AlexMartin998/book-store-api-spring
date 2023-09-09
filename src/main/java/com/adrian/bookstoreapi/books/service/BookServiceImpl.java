@@ -15,9 +15,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -72,17 +72,14 @@ public class BookServiceImpl implements BookService {
         Category category = findOneCategoryById(bookUPDRequestDto.getCategoryId());
         findOneById(id);
 
-        Book bookToSave = Book.builder()
-                .id(id)
-                .category(category)
-                .title(bookUPDRequestDto.getTitle())
-                .slug(bookUPDRequestDto.getSlug())
-                .description(bookUPDRequestDto.getDescription())
-                .price(bookUPDRequestDto.getPrice())
-                .coverPath(bookUPDRequestDto.getCoverPath())
-                .filePath(bookUPDRequestDto.getFilePath())
-                .build();
+        Book bookBySlug = findOneBySlug(bookUPDRequestDto.getSlug());
+        if (bookBySlug != null && !Objects.equals(bookBySlug.getId(), id))
+            throw new BadRequestException("Slug '".concat(bookUPDRequestDto.getSlug()).concat("' already registered"));
 
+
+        Book bookToSave = modelMapper.map(bookUPDRequestDto, Book.class);
+        bookToSave.setId(id);  // avoid assigning categoryId
+        bookToSave.setCategory(category);
 
         return modelMapper.map(bookRepository.save(bookToSave), BookResponseDto.class);
     }
