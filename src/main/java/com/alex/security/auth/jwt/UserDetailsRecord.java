@@ -2,8 +2,6 @@ package com.alex.security.auth.jwt;
 
 import com.alex.security.auth.entity.Role;
 import com.alex.security.users.entity.Usuario;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,11 +11,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-@Getter
-@RequiredArgsConstructor
-public class UserDetailsImpl implements UserDetails {
-
-    private final Usuario user;
+// Record requires Java 14
+public record UserDetailsRecord(Usuario user) implements UserDetails {
 
 
     // Roles

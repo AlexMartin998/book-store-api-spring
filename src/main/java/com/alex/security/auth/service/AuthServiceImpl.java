@@ -3,7 +3,7 @@ package com.alex.security.auth.service;
 import com.alex.security.auth.dto.AuthResponseDto;
 import com.alex.security.auth.dto.LoginRequestDto;
 import com.alex.security.auth.dto.RegisterRequestDto;
-import com.alex.security.auth.jwt.UserDetailsImpl;
+import com.alex.security.auth.jwt.UserDetailsRecord;
 import com.alex.security.users.entity.Usuario;
 import com.alex.security.users.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
         String jwtToken = jwtService.generateJwt(userDetails);
         AuthResponseDto.UserDto userDto = modelMapper.map(
-                ((UserDetailsImpl) userDetails).getUser(),
+                ((UserDetailsRecord) userDetails).user(),
                 AuthResponseDto.UserDto.class
         );
 
