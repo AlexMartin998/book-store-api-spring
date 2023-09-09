@@ -57,7 +57,7 @@ public class UserDetailsImpl implements UserDetails {
 
     // map all user roles
     private Collection<? extends GrantedAuthority> mapRoles(Set<Role> roles) {
-        return roles.stream().map(rol -> new SimpleGrantedAuthority(rol.getName())).collect(Collectors.toSet());
+        return roles.stream().map(rol -> new SimpleGrantedAuthority(rol.getName().name())).collect(Collectors.toSet());
     }
 
 }

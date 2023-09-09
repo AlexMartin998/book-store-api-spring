@@ -1,5 +1,6 @@
 package com.alex.security.auth.entity;
 
+import com.alex.security.common.constants.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Where;
@@ -22,7 +23,8 @@ public class Role {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private RoleEnum name;
 
     @Column(name = "deleted")
     private boolean deleted = false;
