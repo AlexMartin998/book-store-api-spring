@@ -1,8 +1,8 @@
 package com.adrian.bookstoreapi.home.controller;
 
 import com.adrian.bookstoreapi.books.dto.PaginatedBooksResponseDto;
-import com.adrian.bookstoreapi.books.service.BookService;
 import com.adrian.bookstoreapi.common.constants.PaginationConstants;
+import com.adrian.bookstoreapi.home.service.HomeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final BookService bookService;
+    private final HomeService homeService;
 
-    @GetMapping("courses")
+    @GetMapping("books")
     public ResponseEntity<PaginatedBooksResponseDto> getAll(
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_SIZE) int size,
@@ -32,7 +32,7 @@ public class HomeController {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return ResponseEntity.ok(bookService.findAll(pageable));
+        return ResponseEntity.ok(homeService.findAllBooks(pageable));
     }
 
 }
