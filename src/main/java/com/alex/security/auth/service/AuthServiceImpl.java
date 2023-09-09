@@ -3,12 +3,14 @@ package com.alex.security.auth.service;
 import com.alex.security.auth.dto.AuthResponseDto;
 import com.alex.security.auth.dto.LoginRequestDto;
 import com.alex.security.auth.dto.RegisterRequestDto;
+import com.alex.security.auth.jwt.UserDetailsImpl;
 import com.alex.security.users.entity.Usuario;
 import com.alex.security.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,8 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponseDto register(RegisterRequestDto registerDto) {
         Usuario newUser = createUserFromDto(registerDto);
         Usuario createdUser = userService.create(newUser);
-        return generateAuthResponse(createdUser);
+
+        return generateAuthResponse(createdUser.getEmail());
     }
 
     @Override
@@ -38,16 +41,12 @@ public class AuthServiceImpl implements AuthService {
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
         );
 
-        Usuario user = userService.findOneByEmail(loginDto.getEmail());
-
-        return generateAuthResponse(user);
+        return generateAuthResponse(loginDto.getEmail());
     }
 
     @Override
     public AuthResponseDto renewJwt(String userEmail) {
-        Usuario user = userService.findOneByEmail(userEmail);
-
-        return generateAuthResponse(user);
+        return generateAuthResponse(userEmail);
     }
 
 
@@ -57,10 +56,14 @@ public class AuthServiceImpl implements AuthService {
         return newUser;
     }
 
-    private AuthResponseDto generateAuthResponse(Usuario user) {
-        var userDetails = customUserDetailsService.loadUserByUsername(user.getEmail());
-        var jwtToken = jwtService.generateJwt(userDetails);
-        var userDto = modelMapper.map(user, AuthResponseDto.UserDto.class);
+    private AuthResponseDto generateAuthResponse(String userEmail) {
+        // get userDetails and validate if it exists
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
+        String jwtToken = jwtService.generateJwt(userDetails);
+        AuthResponseDto.UserDto userDto = modelMapper.map(
+                ((UserDetailsImpl) userDetails).getUser(),
+                AuthResponseDto.UserDto.class
+        );
 
         return AuthResponseDto.builder()
                 .token(jwtToken)
