@@ -4,6 +4,7 @@ import com.alex.security.auth.repository.RoleRepository;
 import com.alex.security.users.entity.Usuario;
 import com.alex.security.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +28,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Usuario findByEmail(String email) {
-        return null;
+    public Usuario findOneByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(
+                // to customize ErrMsg in GlobalExceptionHandler <-- Auth
+                () -> new UsernameNotFoundException("User not found with email: ".concat(email))
+        );
     }
 
 }

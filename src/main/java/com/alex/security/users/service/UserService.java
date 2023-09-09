@@ -7,6 +7,6 @@ public interface UserService {
 
     Usuario create(Usuario user);
 
-    Usuario findByEmail(String email);
+    Usuario findOneByEmail(String email);
 
 }
