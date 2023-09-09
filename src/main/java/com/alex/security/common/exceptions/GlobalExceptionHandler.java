@@ -84,4 +84,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {  //
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+    // // Bad request exception
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorDetailsDto> handlerBadRequestException(
+            BadRequestException exception,
+            WebRequest webRequest
+    ) {
+        ErrorDetailsDto errorDetails = ErrorDetailsDto.builder()
+                .timeStamp(new Date())
+                .message(exception.getMessage())
+                .details(webRequest.getDescription(false))
+                .build();
+
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
 }
