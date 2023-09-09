@@ -1,5 +1,6 @@
 package com.adrian.bookstoreapi.storage.controller;
 
+import com.adrian.bookstoreapi.storage.dto.FileStoredResponseDto;
 import com.adrian.bookstoreapi.storage.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,12 +23,11 @@ public class StorageController {
 
 
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(
+    public ResponseEntity<FileStoredResponseDto> upload(
             // form-data key must be named as file
             @RequestParam(name = "file") MultipartFile file
     ) {
-        storageService.store(file);
-
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        return new ResponseEntity<>(storageService.store(file), HttpStatus.CREATED);
     }
+
 }

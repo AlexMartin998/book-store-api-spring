@@ -2,6 +2,7 @@ package com.adrian.bookstoreapi.storage.service;
 
 import com.adrian.bookstoreapi.common.exceptions.ResourceNotFoundException;
 import com.adrian.bookstoreapi.common.exceptions.StorageException;
+import com.adrian.bookstoreapi.storage.dto.FileStoredResponseDto;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -43,7 +44,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public String store(MultipartFile file) {
+    public FileStoredResponseDto store(MultipartFile file) {
         String originalFilename = file.getOriginalFilename();
         String filename = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(originalFilename);
 
@@ -56,7 +57,10 @@ public class FileSystemStorageService implements StorageService {
             throw new StorageException("File could not be stored");
         }
 
-        return filename;
+        FileStoredResponseDto fileStoredResponseDto = new FileStoredResponseDto();
+        fileStoredResponseDto.setFilename(filename);
+
+        return fileStoredResponseDto;
     }
 
     @Override
