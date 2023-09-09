@@ -1,14 +1,18 @@
 package com.alex.security.users.entity;
 
+import com.alex.security.auth.entity.Role;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 
 @Data   // provee todos los getter/setter, toString, @RequiredArgsConstructor
 @Entity
 @Table(name = "_user")   // in postgresql and jpa/hibernate user is reserved
+@Where(clause = "deleted = false")
 public class Usuario {
 
     @Id
@@ -29,6 +33,16 @@ public class Usuario {
     private LocalDateTime updatedAt;
 
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Set<Role> roles;
+
+
+    // // for more control we can use those methods, but for simplicity `@EntityListeners(AuditingEntityListener.class)`
     @PrePersist
     private void prePersist() {
         createdAt = LocalDateTime.now();
