@@ -1,12 +1,18 @@
 package com.alex.security.users.service;
 
+import com.alex.security.auth.entity.Role;
 import com.alex.security.auth.repository.RoleRepository;
+import com.alex.security.common.constants.RoleEnum;
+import com.alex.security.common.exceptions.BadRequestException;
+import com.alex.security.common.exceptions.ResourceNotFoundException;
 import com.alex.security.users.entity.Usuario;
 import com.alex.security.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
 
 
 @Service
@@ -21,13 +27,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Usuario create(Usuario user) {
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Som error");
+            throw new BadRequestException("User Already Registered");
         }
 
-        return null;
+        Role role = roleRepository.findByName(RoleEnum.USER.name()).orElseThrow(
+                () -> new ResourceNotFoundException("Role", "name", RoleEnum.USER.name())
+        );
+        user.setRoles(Collections.singleton(role));  // Collections.singleton()  --> return  Set<T>
+
+        return userRepository.save(user);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Usuario findOneByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(
                 // to customize ErrMsg in GlobalExceptionHandler <-- Auth
