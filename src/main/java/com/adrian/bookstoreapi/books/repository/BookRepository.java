@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
+import java.util.Set;
 
 
 public interface BookRepository extends JpaRepository<Book, Long> {
@@ -15,5 +16,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Page<Book> fetchAll(Pageable pageable);
 
     Optional<Book> findBySlug(String slug);
+
+    Set<Book> findTop6ByOrderByCreatedAtDesc();
 
 }
