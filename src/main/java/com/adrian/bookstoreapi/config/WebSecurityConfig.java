@@ -37,9 +37,9 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                     .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login","/api/v1/free/**")
-                    .permitAll() //white list
-                    .anyRequest()
-                        .authenticated()
+                        .permitAll() //white list
+                .anyRequest()
+                    .authenticated()
                 .and()
                     .sessionManagement()    // stateless: elimina las sessiones para q con c/request se valide el auth
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
