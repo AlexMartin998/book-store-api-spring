@@ -1,6 +1,6 @@
 package com.alex.security.auth.service;
 
-import com.alex.security.auth.jwt.UserDetailsRecord;
+import com.alex.security.auth.jwt.UserDetailsImpl;
 import com.alex.security.users.entity.Usuario;
 import com.alex.security.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 () -> new UsernameNotFoundException("Invalid Token")
         );
 
-        return new UserDetailsRecord(user);
+        return new UserDetailsImpl(user);
     }
 
 }

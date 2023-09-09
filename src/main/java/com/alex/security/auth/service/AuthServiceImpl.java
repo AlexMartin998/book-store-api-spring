@@ -3,7 +3,7 @@ package com.alex.security.auth.service;
 import com.alex.security.auth.dto.AuthResponseDto;
 import com.alex.security.auth.dto.LoginRequestDto;
 import com.alex.security.auth.dto.RegisterRequestDto;
-import com.alex.security.auth.jwt.UserDetailsRecord;
+import com.alex.security.auth.jwt.UserDetailsImpl;
 import com.alex.security.users.entity.Usuario;
 import com.alex.security.users.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
         String jwtToken = jwtService.generateJwt(userDetails);
         AuthResponseDto.UserDto userDto = modelMapper.map(
-                ((UserDetailsRecord) userDetails).user(),
+                ((UserDetailsImpl) userDetails).getUser(),
                 AuthResponseDto.UserDto.class
         );
 
