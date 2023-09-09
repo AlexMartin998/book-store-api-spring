@@ -47,6 +47,12 @@ public class BookController {
         return ResponseEntity.ok(bookService.findAll(pageable));
     }
 
+    @GetMapping("/{id}")
+    @Secured(RoleConstants.ADMIN)
+    public ResponseEntity<BookResponseDto> getBook(@PathVariable Long id) {
+        return ResponseEntity.ok(bookService.findOne(id));
+    }
+
     @PatchMapping("/{id}")
     @Secured(RoleConstants.ADMIN)
     public ResponseEntity<BookResponseDto> update(@PathVariable Long id, @Valid @RequestBody BookUPDRequestDto bookUPDRequestDto) {
