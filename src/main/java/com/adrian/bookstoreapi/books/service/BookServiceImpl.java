@@ -45,6 +45,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public BookResponseDto findOne(Long id) {
+        Book book = findOneById(id);
+
+        return modelMapper.map(book, BookResponseDto.class);
+    }
+
+    @Override
     public BookResponseDto create(BookRequestDto bookRequestDto) {
         Category category = findOneCategoryById(bookRequestDto.getCategoryId());
         Book savedBook = findOneBySlug(bookRequestDto.getSlug());
@@ -66,6 +73,11 @@ public class BookServiceImpl implements BookService {
 
     private Book findOneBySlug(String slug) {
         return bookRepository.findBySlug(slug).orElse(null);
+    }
+
+    private Book findOneById(Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book", "ID", id));
     }
 
 }

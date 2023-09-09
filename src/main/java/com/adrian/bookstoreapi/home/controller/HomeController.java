@@ -1,5 +1,6 @@
 package com.adrian.bookstoreapi.home.controller;
 
+import com.adrian.bookstoreapi.books.dto.BookResponseDto;
 import com.adrian.bookstoreapi.books.dto.PaginatedBooksResponseDto;
 import com.adrian.bookstoreapi.common.constants.PaginationConstants;
 import com.adrian.bookstoreapi.home.service.HomeService;
@@ -8,10 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -21,8 +19,9 @@ public class HomeController {
 
     private final HomeService homeService;
 
-    @GetMapping("books")
-    public ResponseEntity<PaginatedBooksResponseDto> getAll(
+
+    @GetMapping("/books")
+    public ResponseEntity<PaginatedBooksResponseDto> getAllBooks(
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_SIZE) int size,
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_SORT_BY) String sortBy,
@@ -33,6 +32,11 @@ public class HomeController {
         Pageable pageable = PageRequest.of(page, size, sort);
 
         return ResponseEntity.ok(homeService.findAllBooks(pageable));
+    }
+
+    @GetMapping("/books/{id}")
+    public ResponseEntity<BookResponseDto> getBook(@PathVariable Long id) {
+        return ResponseEntity.ok(homeService.findOneBook(id));
     }
 
 }
