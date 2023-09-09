@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-    @Query("SELECT b FROM Book b LEFT JOIN FETCH b.category")
+    @Query("SELECT b FROM Book b LEFT JOIN FETCH Category c ON c.id = b.category.id")
     Page<Book> fetchAll(Pageable pageable);
 
 }
