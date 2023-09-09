@@ -16,7 +16,6 @@ public class BookResponseDto {
     private String description;
     private String coverPath;
     private String filePath;
-    private Long categoryId;
     private SimpleCategoryDto category;
 
 }
