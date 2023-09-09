@@ -2,6 +2,8 @@ package com.adrian.bookstoreapi.common.exceptions;
 
 import com.adrian.bookstoreapi.common.dto.ErrorDetailsDto;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -10,21 +12,21 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 // Handler de TODAS las exceptions de nuestra App. -- basta con esto, ya NOO necesita mas nada, ni ser importado ni notificado a Spring
 //@ControllerAdvice
-@RestControllerAdvice
+@RestControllerAdvice // semantico para res
+@RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {  // extends para crear el handler del @Valid
+
+    private final MessageSource messageSource;
 
     // // Authentication || UsernameNotFoundException
     @ExceptionHandler(BadCredentialsException.class)
@@ -92,16 +94,32 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {  //
             @NonNull HttpStatusCode status,
             @NonNull WebRequest request
     ) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach(err -> {
+        Map<String, List<String>> errors = new HashMap<>();
+        List<String> errorMessages = ex.getBindingResult().getAllErrors().stream().map(err -> {
             String fieldName = ((FieldError) err).getField();
-            String message = err.getDefaultMessage();
+            String message = messageSource.getMessage(err, Locale.getDefault()); // get messages.properties
 
-            errors.put(fieldName, message);
-        });
+            return fieldName.concat(": ").concat(message);
+        }).toList();
+        errors.put("errors", errorMessages);
 
         return new ResponseEntity<>(errors, status);
     }
+    // without @Override (extends) and based on ProblemDetail (Spring Boot 3+)
+    /*@ExceptionHandler(MethodArgumentNotValidException.class)
+    ProblemDetail handleValidationError(MethodArgumentNotValidException manve) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNPROCESSABLE_ENTITY);
+
+        List<FieldError> fieldErrors = manve.getFieldErrors();
+        List<String> errors = new ArrayList<>();
+
+        for (FieldError fe : fieldErrors) {
+            String message = messageSource.getMessage(fe, Locale.getDefault());
+            errors.add(message);
+        }
+        problemDetail.setProperty("errors", errors);
+        return problemDetail;
+    }*/
 
 
     private ResponseEntity<ErrorDetailsDto> createErrorResponse(Exception exception, String message, HttpStatus httpStatus, WebRequest webRequest) {
