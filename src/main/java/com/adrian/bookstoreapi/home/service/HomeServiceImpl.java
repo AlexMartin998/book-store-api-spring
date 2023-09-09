@@ -1,5 +1,6 @@
 package com.adrian.bookstoreapi.home.service;
 
+import com.adrian.bookstoreapi.books.dto.BookResponseDto;
 import com.adrian.bookstoreapi.books.dto.PaginatedBooksResponseDto;
 import com.adrian.bookstoreapi.books.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,11 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public PaginatedBooksResponseDto findAllBooks(Pageable pageable) {
         return this.bookService.findAll(pageable);
+    }
+
+    @Override
+    public BookResponseDto findOneBook(Long id) {
+        return bookService.findOne(id);
     }
 
 }

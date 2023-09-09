@@ -9,6 +9,8 @@ public interface BookService {
 
     PaginatedBooksResponseDto findAll(Pageable pageable);
 
+    BookResponseDto findOne(Long id);
+
     BookResponseDto create(BookRequestDto bookRequestDto);
 
 }
