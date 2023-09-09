@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 //@Table("book") // singular form by default
-@Where(clause = "deleted = false") // filtra los deleted para todos los Select
+@Where(clause = "deleted = false and active = true") // filtra los deleted para todos los Select
 public class Book {
 
     @Id
@@ -39,7 +39,9 @@ public class Book {
     private String coverPath;
     private String filePath;
 
-    @Column(columnDefinition = "boolean default false")
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean active;
+    @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean deleted = false;
 
     private LocalDateTime createdAt;
