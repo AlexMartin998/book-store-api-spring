@@ -1,5 +1,7 @@
 package com.adrian.bookstoreapi.books.entity;
 
+import com.adrian.bookstoreapi.categories.entity.Category;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,7 +21,7 @@ public class Book {
 
     @Column(nullable = false)
     private String title;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String slug;
 
     private String description;
@@ -29,10 +31,18 @@ public class Book {
     private String coverPath;
     private String filePath;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean deleted = false;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime createdAt;
-
     private LocalDateTime updatedAt;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    @JsonBackReference("category_ref")
+    private Category category;
 
 
     @PrePersist
