@@ -32,6 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 notes*md
+mediafile/
 
 ### Compiled output ###
 /node_modules

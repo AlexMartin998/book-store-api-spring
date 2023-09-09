@@ -31,11 +31,14 @@ public class FileSystemStorageService implements StorageService {
     @Override
     @PostConstruct
     public void init() {
-        // create directory after constructor generation
-        try {
-            Files.createDirectory(Paths.get(storageLocation));
-        } catch (IOException ex) {
-            throw new StorageException("Failed to create file storage directory");
+        // create directory after constructor generation only if it does not exist
+        Path storagePath = Paths.get(storageLocation);
+        if (!Files.exists(storagePath)) {
+            try {
+                Files.createDirectory(storagePath);
+            } catch (IOException ex) {
+                throw new StorageException("Failed to create file storage directory");
+            }
         }
     }
 
