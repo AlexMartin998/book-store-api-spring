@@ -1,8 +1,9 @@
 package com.adrian.bookstoreapi.home.controller;
 
 import com.adrian.bookstoreapi.books.dto.BookResponseDto;
-import com.adrian.bookstoreapi.books.dto.PaginatedBooksResponseDto;
 import com.adrian.bookstoreapi.common.constants.PaginationConstants;
+import com.adrian.bookstoreapi.home.dto.BookHomeResponseDto;
+import com.adrian.bookstoreapi.home.dto.PaginatedBooksHomeResponseDto;
 import com.adrian.bookstoreapi.home.service.HomeService;
 import com.adrian.bookstoreapi.storage.service.StorageService;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +43,9 @@ public class HomeController {
         return ResponseEntity.ok(homeService.findAllBooks(pageable));
     }
 
-    @GetMapping("/books/{id}")
-    public ResponseEntity<BookResponseDto> getBook(@PathVariable Long id) {
-        return ResponseEntity.ok(homeService.findOneBook(id));
+    @GetMapping("/books/{slug}")
+    public ResponseEntity<BookHomeResponseDto> getBook(@PathVariable String slug) {
+        return ResponseEntity.ok(homeService.findOneBookBySlug(slug));
     }
 
     @GetMapping("/books/latest-published")

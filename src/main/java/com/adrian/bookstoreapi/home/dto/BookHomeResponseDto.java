@@ -1,4 +1,4 @@
-package com.adrian.bookstoreapi.home.controller;
+package com.adrian.bookstoreapi.home.dto;
 
 import com.adrian.bookstoreapi.categories.dto.SimpleCategoryDto;
 import lombok.Data;

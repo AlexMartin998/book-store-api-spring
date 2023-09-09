@@ -1,4 +1,4 @@
-package com.adrian.bookstoreapi.home.controller;
+package com.adrian.bookstoreapi.home.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
