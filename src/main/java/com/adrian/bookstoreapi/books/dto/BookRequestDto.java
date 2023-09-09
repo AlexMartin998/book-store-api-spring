@@ -31,6 +31,6 @@ public class BookRequestDto {
     private String filePath;
 
     @NotNull
-    private Long categoryId;
+    private long categoryId;
 
 }

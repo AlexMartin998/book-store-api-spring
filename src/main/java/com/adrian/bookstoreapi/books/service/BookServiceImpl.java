@@ -29,7 +29,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public PaginatedBooksResponseDto findAll(Pageable pageable) {
-        Page<Book> bookPage = bookRepository.findAll(pageable);
+        Page<Book> bookPage = bookRepository.fetchAll(pageable);
         List<BookResponseDto> bookDtoList = bookPage.getContent().stream()
                 .map(book -> modelMapper.map(book, BookResponseDto.class))
                 .toList();
@@ -51,14 +51,9 @@ public class BookServiceImpl implements BookService {
         if (savedBook != null)
             throw new BadRequestException("Slug '".concat(bookRequestDto.getSlug()).concat("' already registered"));
 
-        Book book = Book.builder()
-                .category(category)
-                .title(bookRequestDto.getTitle())
-                .slug(bookRequestDto.getSlug())
-                .price(bookRequestDto.getPrice())
-                .description(bookRequestDto.getDescription())
-                .deleted(false)
-                .build();
+        Book book = modelMapper.map(bookRequestDto, Book.class);
+        book.setId(null);  // avoid assigning categoryId to bookId and the consequent UPD error
+        book.setCategory(category);
 
         return modelMapper.map(bookRepository.save(book), BookResponseDto.class);
     }
