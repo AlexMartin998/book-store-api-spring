@@ -2,6 +2,7 @@ package com.alex.security.auth.jwt;
 
 import com.alex.security.auth.service.CustomUserDetailsService;
 import com.alex.security.auth.service.JwtService;
+import com.alex.security.common.exceptions.UnauthorizedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +18,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 
 @Component  // transform/register to a managed @Bean of Spring (Inject)
@@ -35,10 +37,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,   // res como tal
             @NonNull FilterChain filterChain         // continuara con la ejecucion de los demas filtros de la filterChain
     ) throws ServletException, IOException {
-        final String jwt = getJwtFromRequest(request);
+        try {
+            final String jwt = getJwtFromRequest(request);
 
-        if (StringUtils.hasText(jwt)) {
-            try {
+            if (StringUtils.hasText(jwt)) {
                 String userEmail = jwtService.extractUsername(jwt);  // username 'cause jwt call like this (email, uuid, username)
 
                 // // si ya esta auth NO debo actualizar el SecurityContextHolder ni demas cosas
@@ -63,16 +65,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     }
                 }
-            } catch (Exception e) {
-                // handling Filter exceptions that can't be caught by GlobalExceptionHandler
-                securityErrorResponse.sendErrorResponse(
-                        request,
-                        response,
-                        HttpServletResponse.SC_UNAUTHORIZED,
-                        e.getMessage()
-                );
-                return;
             }
+        } catch (Exception e) {
+            // handling Filter exceptions that can't be caught by GlobalExceptionHandler
+            securityErrorResponse.sendErrorResponse(
+                    request,
+                    response,
+                    HttpServletResponse.SC_UNAUTHORIZED,
+                    e.getMessage()
+            );
+            return;
         }
 
         filterChain.doFilter(request, response);
@@ -80,12 +82,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private String getJwtFromRequest(HttpServletRequest request) {
         String authHeader = request.getHeader("Authorization");
+        String currentUri = request.getRequestURI();
 
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
-            return authHeader.replace("Bearer ", "");
-        }
-
-        return null;
+        return jwtService.validateJwtRequest(authHeader, currentUri);
     }
 
 }
