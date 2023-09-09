@@ -54,6 +54,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public BookResponseDto findOneBySlug(String slug) {
+        Book book = findBySlug(slug);
+        if (book == null) throw new ResourceNotFoundException("Book", "slug", slug);
+
+        return modelMapper.map(book, BookResponseDto.class);
+    }
+
+    @Override
     public List<BookResponseDto> findLatestBooks() {
         List<Book> books = bookRepository.findTop6ByOrderByCreatedAtDesc();
 
@@ -65,7 +73,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookResponseDto create(BookRequestDto bookRequestDto) {
         Category category = findOneCategoryById(bookRequestDto.getCategoryId());
-        Book savedBook = findOneBySlug(bookRequestDto.getSlug());
+        Book savedBook = findBySlug(bookRequestDto.getSlug());
         if (savedBook != null)
             throw new BadRequestException("Slug '".concat(bookRequestDto.getSlug()).concat("' already registered"));
 
@@ -81,7 +89,7 @@ public class BookServiceImpl implements BookService {
         Category category = findOneCategoryById(bookUPDRequestDto.getCategoryId());
         findOneById(id);
 
-        Book bookBySlug = findOneBySlug(bookUPDRequestDto.getSlug());
+        Book bookBySlug = findBySlug(bookUPDRequestDto.getSlug());
         if (bookBySlug != null && !Objects.equals(bookBySlug.getId(), id))
             throw new BadRequestException("Slug '".concat(bookUPDRequestDto.getSlug()).concat("' already registered"));
 
@@ -99,7 +107,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category", "ID", categoryId));
     }
 
-    private Book findOneBySlug(String slug) {
+    private Book findBySlug(String slug) {
         return bookRepository.findBySlug(slug).orElse(null);
     }
 

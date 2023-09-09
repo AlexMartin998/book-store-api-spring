@@ -14,6 +14,8 @@ public interface BookService {
 
     BookResponseDto findOne(Long id);
 
+    BookResponseDto findOneBySlug(String slug);
+
     List<BookResponseDto> findLatestBooks();
 
     BookResponseDto create(BookRequestDto bookRequestDto);
