@@ -4,12 +4,18 @@ import com.adrian.bookstoreapi.books.dto.BookResponseDto;
 import com.adrian.bookstoreapi.books.dto.PaginatedBooksResponseDto;
 import com.adrian.bookstoreapi.common.constants.PaginationConstants;
 import com.adrian.bookstoreapi.home.service.HomeService;
+import com.adrian.bookstoreapi.storage.service.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.nio.file.Files;
 
 
 @RestController
@@ -18,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class HomeController {
 
     private final HomeService homeService;
+    private final StorageService storageService;
 
 
     @GetMapping("/books")
@@ -37,6 +44,18 @@ public class HomeController {
     @GetMapping("/books/{id}")
     public ResponseEntity<BookResponseDto> getBook(@PathVariable Long id) {
         return ResponseEntity.ok(homeService.findOneBook(id));
+    }
+
+    // // modify contentType Header Response
+    @GetMapping("/files/{filename}")
+    ResponseEntity<Resource> getResource(@PathVariable String filename) throws IOException {
+        Resource resource = storageService.loadAsResource(filename);
+        String contentType = Files.probeContentType(resource.getFile().toPath());  // hacerlo flexible a pdf/png
+
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.CONTENT_TYPE, contentType)
+                .body(resource);
     }
 
 }

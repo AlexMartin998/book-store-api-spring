@@ -29,6 +29,8 @@ public class FileSystemStorageService implements StorageService {
     private String storageLocation; // dirname that will store files
 
 
+    // // como es 1 @Bean (@Service) se genera 1 sola instancia (singleton) cuando arranca Spring, asi q init() se ejecuta 1 sola vex
+    // cuando arranca Spring x primera vez y NO con c/inyeccion, ya q se inyecta la misma instancia | Todos los @Bean gestionados x spring sigen el patron Singleton
     @Override
     @PostConstruct
     public void init() {
