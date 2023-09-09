@@ -2,6 +2,7 @@ package com.alex.security.users.service;
 
 import com.alex.security.auth.entity.Role;
 import com.alex.security.auth.repository.RoleRepository;
+import com.alex.security.common.constants.RoleConstants;
 import com.alex.security.common.constants.RoleEnum;
 import com.alex.security.common.exceptions.BadRequestException;
 import com.alex.security.common.exceptions.ResourceNotFoundException;
@@ -30,8 +31,8 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("User Already Registered");
         }
 
-        Role role = roleRepository.findByName(RoleEnum.USER.name()).orElseThrow(
-                () -> new ResourceNotFoundException("Role", "name", RoleEnum.USER.name())
+        Role role = roleRepository.findByName(RoleConstants.USER).orElseThrow(
+                () -> new ResourceNotFoundException("Role", "name", RoleConstants.USER)
         );
         user.setRoles(Collections.singleton(role));  // Collections.singleton()  --> return  Set<T>
 
