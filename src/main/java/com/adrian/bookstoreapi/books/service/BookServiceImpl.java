@@ -2,6 +2,7 @@ package com.adrian.bookstoreapi.books.service;
 
 import com.adrian.bookstoreapi.books.dto.BookRequestDto;
 import com.adrian.bookstoreapi.books.dto.BookResponseDto;
+import com.adrian.bookstoreapi.books.dto.BookUPDRequestDto;
 import com.adrian.bookstoreapi.books.dto.PaginatedBooksResponseDto;
 import com.adrian.bookstoreapi.books.entity.Book;
 import com.adrian.bookstoreapi.books.repository.BookRepository;
@@ -14,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -63,6 +65,26 @@ public class BookServiceImpl implements BookService {
         book.setCategory(category);
 
         return modelMapper.map(bookRepository.save(book), BookResponseDto.class);
+    }
+
+    @Override
+    public BookResponseDto update(Long id, BookUPDRequestDto bookUPDRequestDto) {
+        Category category = findOneCategoryById(bookUPDRequestDto.getCategoryId());
+        findOneById(id);
+
+        Book bookToSave = Book.builder()
+                .id(id)
+                .category(category)
+                .title(bookUPDRequestDto.getTitle())
+                .slug(bookUPDRequestDto.getSlug())
+                .description(bookUPDRequestDto.getDescription())
+                .price(bookUPDRequestDto.getPrice())
+                .coverPath(bookUPDRequestDto.getCoverPath())
+                .filePath(bookUPDRequestDto.getFilePath())
+                .build();
+
+
+        return modelMapper.map(bookRepository.save(bookToSave), BookResponseDto.class);
     }
 
 
