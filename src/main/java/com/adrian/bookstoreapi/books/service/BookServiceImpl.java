@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -56,12 +54,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Set<BookResponseDto> findLatestBooks() {
-        Set<Book> books = bookRepository.findTop6ByOrderByCreatedAtDesc();
+    public List<BookResponseDto> findLatestBooks() {
+        List<Book> books = bookRepository.findTop6ByOrderByCreatedAtDesc();
 
         return books.stream()
                 .map(book -> modelMapper.map(book, BookResponseDto.class))
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     @Override

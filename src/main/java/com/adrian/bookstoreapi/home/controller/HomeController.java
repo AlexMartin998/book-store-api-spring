@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 
 @RestController
@@ -44,6 +45,11 @@ public class HomeController {
     @GetMapping("/books/{id}")
     public ResponseEntity<BookResponseDto> getBook(@PathVariable Long id) {
         return ResponseEntity.ok(homeService.findOneBook(id));
+    }
+
+    @GetMapping("/books/latest-published")
+    public ResponseEntity<List<BookResponseDto>> getLatestBooks() {
+        return ResponseEntity.ok(homeService.findLatestBooks());
     }
 
     // // modify contentType Header Response
