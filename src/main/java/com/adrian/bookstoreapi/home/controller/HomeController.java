@@ -29,7 +29,7 @@ public class HomeController {
 
 
     @GetMapping("/books")
-    public ResponseEntity<PaginatedBooksResponseDto> getAllBooks(
+    public ResponseEntity<PaginatedBooksHomeResponseDto> getAllBooks(
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_SIZE) int size,
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_SORT_BY) String sortBy,

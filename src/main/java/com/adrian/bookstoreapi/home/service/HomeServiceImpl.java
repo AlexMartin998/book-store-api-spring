@@ -3,7 +3,9 @@ package com.adrian.bookstoreapi.home.service;
 import com.adrian.bookstoreapi.books.dto.BookResponseDto;
 import com.adrian.bookstoreapi.books.dto.PaginatedBooksResponseDto;
 import com.adrian.bookstoreapi.books.service.BookService;
+import com.adrian.bookstoreapi.home.controller.PaginatedBooksHomeResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,14 @@ import java.util.List;
 public class HomeServiceImpl implements HomeService {
 
     private final BookService bookService;
+    private final ModelMapper modelMapper;
 
 
     @Override
-    public PaginatedBooksResponseDto findAllBooks(Pageable pageable) {
-        return this.bookService.findAll(pageable);
+    public PaginatedBooksHomeResponseDto findAllBooks(Pageable pageable) {
+        PaginatedBooksResponseDto paginatedBooksResponseDto = this.bookService.findAll(pageable);
+
+        return modelMapper.map(paginatedBooksResponseDto, PaginatedBooksHomeResponseDto.class);
     }
 
     @Override
