@@ -23,8 +23,7 @@ public class Role {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @Enumerated(EnumType.STRING)
-    private RoleEnum name;
+    private String name;
 
     @Column(name = "deleted")
     private boolean deleted = false;

@@ -36,6 +36,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {  //
         );
     }
 
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorDetailsDto> handlerBadCredentialsException(UnauthorizedException exception, WebRequest webRequest) {
+        return createErrorResponse(
+                exception,
+                exception.getMessage(),
+                HttpStatus.UNAUTHORIZED,
+                webRequest
+        );
+    }
+
     // // Authorization
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorDetailsDto> handlerAccessDeniedException(AccessDeniedException exception, WebRequest webRequest) {
