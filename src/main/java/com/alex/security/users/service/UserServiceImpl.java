@@ -3,7 +3,6 @@ package com.alex.security.users.service;
 import com.alex.security.auth.entity.Role;
 import com.alex.security.auth.repository.RoleRepository;
 import com.alex.security.common.constants.RoleConstants;
-import com.alex.security.common.constants.RoleEnum;
 import com.alex.security.common.exceptions.BadRequestException;
 import com.alex.security.common.exceptions.ResourceNotFoundException;
 import com.alex.security.users.entity.Usuario;
@@ -43,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Usuario findOneByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(
-                // to customize ErrMsg in GlobalExceptionHandler <-- Auth
+                // CustomUserDetailsService needs this exception
                 () -> new UsernameNotFoundException("User not found with email: ".concat(email))
         );
     }

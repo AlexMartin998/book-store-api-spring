@@ -1,6 +1,5 @@
 package com.alex.security.auth.entity;
 
-import com.alex.security.common.constants.RoleEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Where;
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 //@Table(name = "role") // for singular it is not necessary
 @Where(clause = "deleted = false")  // filtra los deleted para todos los Select
-@EntityListeners(AuditingEntityListener.class) // Enable auditing features
+@EntityListeners(AuditingEntityListener.class) // Enable auditing features for createdAt,updatedAt
 public class Role {
 
     @Id

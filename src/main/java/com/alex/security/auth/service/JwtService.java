@@ -79,7 +79,8 @@ public class JwtService {
             return authHeader.replace("Bearer ", "");
         }
 
-        // // we need to handle like this 'cause of the filterChain behavior (says that this endpoint exists but need auth, another just 404 <- EntryPoint)
+        // // we need to handle like this 'cause of the filterChain behavior (says that this endpoint exists but need auth, another just handling by EntryPoint)
+        // // Not is possible to set an 404, so this validation is not necessary, but to have 2 errors  <-- .anyRequest().authenticated()
         // regex for any api version
         String regex = "/api/v\\d+/auth/renew-token";
 

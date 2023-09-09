@@ -12,7 +12,7 @@ import java.util.Set;
 @Data   // provee todos los getter/setter, toString, @RequiredArgsConstructor
 @Entity
 @Table(name = "_user")   // in postgresql and jpa/hibernate user is reserved
-@Where(clause = "deleted = false")
+@Where(clause = "deleted = false") // filtra los deleted para todos los Select
 public class Usuario {
 
     @Id

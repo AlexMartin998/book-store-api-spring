@@ -27,8 +27,8 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
         securityErrorResponse.sendErrorResponse(
                 request,
                 response,
-                HttpServletResponse.SC_NOT_FOUND,
-                "Resource not found"
+                HttpServletResponse.SC_UNAUTHORIZED,
+                authException.getMessage()
         );
     }
 

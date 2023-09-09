@@ -51,6 +51,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+        // soft delete validation
         return !user.isDeleted();
     }
 
