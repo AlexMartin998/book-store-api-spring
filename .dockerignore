@@ -1,0 +1,18 @@
+# Ignore IntelliJ IDEA specific files and directories
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Ignore Visual Studio Code specific files and directories
+.vscode/
+
+# Ignore Docker specific files
+Dockerfile
+docker-compose.yml
+docker-compose.dev.yml
+
+# Ignore miscellaneous files and directories
+*.log
+*.log.*
+*.swp
