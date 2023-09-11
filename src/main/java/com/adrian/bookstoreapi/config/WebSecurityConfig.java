@@ -31,6 +31,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .cors().and()
                 .csrf().disable()
                 .exceptionHandling()
                     .authenticationEntryPoint(jwtAuthEntryPoint)    // handle Spring Security Error Response / customize error msg
