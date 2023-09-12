@@ -19,7 +19,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 //@Table("book") // singular form by default
-@Where(clause = "deleted = false and active = true") // filtra los deleted para todos los Select
+//@Where(clause = "deleted = false and active = true") // filtra los deleted para todos los Select
+@Where(clause = "deleted = false") // filtra los deleted para todos los Select
 public class Book {
 
     @Id

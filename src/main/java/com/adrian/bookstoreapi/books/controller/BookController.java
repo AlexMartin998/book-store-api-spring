@@ -47,9 +47,16 @@ public class BookController {
         return ResponseEntity.ok(bookService.findAll(pageable));
     }
 
+    @GetMapping("/slug/{slug}")
+    @Secured(RoleConstants.ADMIN)
+    public ResponseEntity<BookResponseDto> findOneBySlug(@PathVariable String slug) {
+        return ResponseEntity.ok(bookService.findOneBySlug(slug));
+    }
+
+
     @GetMapping("/{id}")
     @Secured(RoleConstants.ADMIN)
-    public ResponseEntity<BookResponseDto> getBook(@PathVariable Long id) {
+    public ResponseEntity<BookResponseDto> findOne(@PathVariable Long id) {
         return ResponseEntity.ok(bookService.findOne(id));
     }
 
