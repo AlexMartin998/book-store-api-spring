@@ -1,11 +1,13 @@
 package com.adrian.bookstoreapi.storage.controller;
 
+import com.adrian.bookstoreapi.common.constants.RoleConstants;
 import com.adrian.bookstoreapi.storage.dto.FileStoredResponseDto;
 import com.adrian.bookstoreapi.storage.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +25,7 @@ public class StorageController {
 
 
     @PostMapping("/upload")
+    @Secured(RoleConstants.ADMIN)
     public ResponseEntity<FileStoredResponseDto> upload(
             // form-data key must be named as file
             @RequestParam(name = "file") MultipartFile file

@@ -101,6 +101,11 @@ public class BookServiceImpl implements BookService {
         return modelMapper.map(bookRepository.save(bookToSave), BookResponseDto.class);
     }
 
+    @Override
+    public boolean existsOneBySlug(String slug) {
+        return bookRepository.existsBySlug(slug);
+    }
+
 
     private Category findOneCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId)

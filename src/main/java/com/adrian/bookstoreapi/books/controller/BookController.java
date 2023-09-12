@@ -53,6 +53,11 @@ public class BookController {
         return ResponseEntity.ok(bookService.findOneBySlug(slug));
     }
 
+    @GetMapping("/availability/slug/{slug}")
+    @Secured(RoleConstants.ADMIN)
+    public ResponseEntity<Boolean> checkSlugAvailability(@PathVariable String slug) {
+        return ResponseEntity.ok(bookService.existsOneBySlug(slug));
+    }
 
     @GetMapping("/{id}")
     @Secured(RoleConstants.ADMIN)

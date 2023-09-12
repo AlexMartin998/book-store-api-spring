@@ -22,4 +22,6 @@ public interface BookService {
 
     BookResponseDto update(Long id, BookUPDRequestDto bookUPDRequestDto);
 
+    boolean existsOneBySlug(String slug);
+
 }

@@ -19,4 +19,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findTop6ByOrderByCreatedAtDesc();
 
+    boolean existsBySlug(String slug);
+
 }
