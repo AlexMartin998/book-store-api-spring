@@ -41,10 +41,11 @@ public class Book {
     private String filePath;
 
     @Column(nullable = false, columnDefinition = "boolean default true")
-    private boolean active;
+    private boolean active = true;
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean deleted = false;
 
+    @Column(updatable = false)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
