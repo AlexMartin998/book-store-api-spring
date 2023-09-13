@@ -1,6 +1,5 @@
 package com.adrian.bookstoreapi.home.service;
 
-import com.adrian.bookstoreapi.books.dto.BookResponseDto;
 import com.adrian.bookstoreapi.home.dto.BookHomeResponseDto;
 import com.adrian.bookstoreapi.home.dto.PaginatedBooksHomeResponseDto;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +12,6 @@ public interface HomeService {
 
     BookHomeResponseDto findOneBookBySlug(String slug);
 
-    List<BookResponseDto> findLatestBooks();
+    List<BookHomeResponseDto> findLatestBooks();
 
 }

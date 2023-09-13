@@ -1,6 +1,5 @@
 package com.adrian.bookstoreapi.home.controller;
 
-import com.adrian.bookstoreapi.books.dto.BookResponseDto;
 import com.adrian.bookstoreapi.common.constants.PaginationConstants;
 import com.adrian.bookstoreapi.home.dto.BookHomeResponseDto;
 import com.adrian.bookstoreapi.home.dto.PaginatedBooksHomeResponseDto;
@@ -49,7 +48,7 @@ public class HomeController {
     }
 
     @GetMapping("/books/latest-published")
-    public ResponseEntity<List<BookResponseDto>> getLatestBooks() {
+    public ResponseEntity<List<BookHomeResponseDto>> getLatestBooks() {
         return ResponseEntity.ok(homeService.findLatestBooks());
     }
 

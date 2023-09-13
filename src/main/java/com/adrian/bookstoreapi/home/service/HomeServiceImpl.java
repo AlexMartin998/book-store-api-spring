@@ -1,6 +1,5 @@
 package com.adrian.bookstoreapi.home.service;
 
-import com.adrian.bookstoreapi.books.dto.BookResponseDto;
 import com.adrian.bookstoreapi.books.dto.PaginatedBooksResponseDto;
 import com.adrian.bookstoreapi.books.service.BookService;
 import com.adrian.bookstoreapi.home.dto.BookHomeResponseDto;
@@ -29,8 +28,10 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public List<BookResponseDto> findLatestBooks() {
-        return bookService.findLatestBooks();
+    public List<BookHomeResponseDto> findLatestBooks() {
+        return bookService.findLatestBooks().stream()
+                .map(bookResponseDto -> modelMapper.map(bookResponseDto, BookHomeResponseDto.class))
+                .toList();
     }
 
     @Override
