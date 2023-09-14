@@ -25,7 +25,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final PaymentGateway paymentGateway;
     private final BookRepository bookRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;

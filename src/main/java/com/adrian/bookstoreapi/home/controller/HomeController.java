@@ -3,14 +3,18 @@ package com.adrian.bookstoreapi.home.controller;
 import com.adrian.bookstoreapi.common.constants.PaginationConstants;
 import com.adrian.bookstoreapi.home.dto.BookHomeResponseDto;
 import com.adrian.bookstoreapi.home.dto.PaginatedBooksHomeResponseDto;
+import com.adrian.bookstoreapi.home.dto.PaymentOrderRequestDto;
 import com.adrian.bookstoreapi.home.service.HomeService;
+import com.adrian.bookstoreapi.payments.dto.PayPalOrderResponseDto;
 import com.adrian.bookstoreapi.storage.service.StorageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,5 +67,15 @@ public class HomeController {
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .body(resource);
     }
+
+
+    // // checkout: free 'cause login is not necessary to buy a book
+    // create purchase order
+    @PostMapping("/checkout/payment-order")
+    ResponseEntity<PayPalOrderResponseDto> createPaymentOrder(@Valid @RequestBody PaymentOrderRequestDto paymentOrderRequestDto) {
+
+        return new ResponseEntity<>(homeService.createPaymentOrder(paymentOrderRequestDto), HttpStatus.CREATED);
+    }
+
 
 }

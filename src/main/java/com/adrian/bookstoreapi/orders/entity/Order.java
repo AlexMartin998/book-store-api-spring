@@ -38,7 +38,7 @@ public class Order {
     @JsonBackReference("customer_order_ref")
     private Usuario customer;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER) // mappedBy = prop name in @ManyToOne | Eager to PayPal itemAmount
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY) // mappedBy = prop name in @ManyToOne | Eager to PayPal itemAmount
     @JsonManagedReference("order_orderitem_ref")
     private List<OrderItem> orderItems;
 
