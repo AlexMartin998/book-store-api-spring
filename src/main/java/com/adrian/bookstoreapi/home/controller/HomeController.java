@@ -4,6 +4,7 @@ import com.adrian.bookstoreapi.common.constants.PaginationConstants;
 import com.adrian.bookstoreapi.home.dto.BookHomeResponseDto;
 import com.adrian.bookstoreapi.home.dto.PaginatedBooksHomeResponseDto;
 import com.adrian.bookstoreapi.home.dto.PaymentOrderRequestDto;
+import com.adrian.bookstoreapi.home.dto.PaymentOrderResponseDto;
 import com.adrian.bookstoreapi.home.service.HomeService;
 import com.adrian.bookstoreapi.payments.dto.PayPalOrderResponseDto;
 import com.adrian.bookstoreapi.storage.service.StorageService;
@@ -72,7 +73,7 @@ public class HomeController {
     // // checkout: free 'cause login is not necessary to buy a book
     // create purchase order
     @PostMapping("/checkout/payment-order")
-    ResponseEntity<PayPalOrderResponseDto> createPaymentOrder(@Valid @RequestBody PaymentOrderRequestDto paymentOrderRequestDto) {
+    ResponseEntity<PaymentOrderResponseDto> createPaymentOrder(@Valid @RequestBody PaymentOrderRequestDto paymentOrderRequestDto) {
 
         return new ResponseEntity<>(homeService.createPaymentOrder(paymentOrderRequestDto), HttpStatus.CREATED);
     }

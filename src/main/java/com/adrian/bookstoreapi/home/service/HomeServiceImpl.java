@@ -5,6 +5,7 @@ import com.adrian.bookstoreapi.books.service.BookService;
 import com.adrian.bookstoreapi.home.dto.BookHomeResponseDto;
 import com.adrian.bookstoreapi.home.dto.PaginatedBooksHomeResponseDto;
 import com.adrian.bookstoreapi.home.dto.PaymentOrderRequestDto;
+import com.adrian.bookstoreapi.home.dto.PaymentOrderResponseDto;
 import com.adrian.bookstoreapi.orders.dto.CreateOrderRequestDto;
 import com.adrian.bookstoreapi.orders.dto.OrderResponseDto;
 import com.adrian.bookstoreapi.orders.entity.Order;
@@ -52,7 +53,7 @@ public class HomeServiceImpl implements HomeService {
 
     @Override
     @Transactional
-    public PayPalOrderResponseDto createPaymentOrder(PaymentOrderRequestDto paymentOrderRequestDto) {
+    public PaymentOrderResponseDto createPaymentOrder(PaymentOrderRequestDto paymentOrderRequestDto) {
         OrderResponseDto orderResponseDto = orderService.create(
                 modelMapper.map(paymentOrderRequestDto, CreateOrderRequestDto.class),
                 "email@email.com");
@@ -62,7 +63,16 @@ public class HomeServiceImpl implements HomeService {
                 paymentOrderRequestDto.getSuccessUrl(),
                 paymentOrderRequestDto.getCancelUrl());
 
-        return paypalPaymentOrder;
+        String approveUrl = paypalPaymentOrder.getLinks().stream()
+                .filter(link -> link.getRel().equals("approve"))
+                .findFirst()
+                .orElseThrow()
+                .getHref();
+
+        PaymentOrderResponseDto paymentOrderResponseDto = new PaymentOrderResponseDto();
+        paymentOrderResponseDto.setApproveUrl(approveUrl);
+
+        return paymentOrderResponseDto;
     }
 
 }
