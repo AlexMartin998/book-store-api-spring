@@ -11,7 +11,7 @@ public class PayPalApplicationContextDto {
     private String brandName;
 
     @JsonProperty("return_url")
-    private String successUrl;
+    private String returnUrl;
 
     @JsonProperty("cancel_url")
     private String cancelUrl;
