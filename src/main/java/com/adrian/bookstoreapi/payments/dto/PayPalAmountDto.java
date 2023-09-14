@@ -13,7 +13,7 @@ public class PayPalAmountDto {
     private CurrencyCode currencyCode;
 
     private String value;
-    private Breakdown breakdown;  //
+    private Breakdown breakdown;
 
     public enum CurrencyCode {
         USD

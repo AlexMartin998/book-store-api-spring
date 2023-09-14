@@ -10,7 +10,7 @@ import java.util.List;
 public class PayPalOrderRequestDto {
 
     @JsonProperty("application_context")
-    private PayPalApplicationContextDto applicationContextDto;
+    private PayPalApplicationContextDto applicationContext;
 
     private Intent intent;
 
