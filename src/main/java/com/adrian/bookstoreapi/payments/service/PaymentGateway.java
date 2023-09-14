@@ -6,6 +6,10 @@ public interface PaymentGateway {
 
     Object createOrder(Order order, String successUrl, String cancelUrl);
 
+    Object capturePaymentOrder(String orderId);
+
+
+
     Object processPayment();
 
     Object getTransactionStatus();

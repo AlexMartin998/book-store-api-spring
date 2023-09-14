@@ -2,9 +2,7 @@ package com.adrian.bookstoreapi.payments.service;
 
 import com.adrian.bookstoreapi.books.entity.Book;
 import com.adrian.bookstoreapi.orders.entity.Order;
-import com.adrian.bookstoreapi.orders.repository.OrderRepository;
 import com.adrian.bookstoreapi.payments.dto.*;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -34,16 +32,9 @@ public class PayPalPaymentGateway implements PaymentGateway {
     @Value("${app.paypal.secret}")
     private String PAYPAL_SECRET;
 
-    private final OrderRepository orderRepository;
-
-    @PostConstruct
-    private void init() {
-        Order order = orderRepository.findById(2L).orElseThrow();
-        createOrder(order, "https://google.com", "https://google.com");
-    }
 
     @Override
-    public Object createOrder(Order order, String successUrl, String cancelUrl) {
+    public PayPalOrderResponseDto createOrder(Order order, String successUrl, String cancelUrl) {
         String url = String.format("%s/v2/checkout/orders", PAYPAL_API_BASE);
 
         PayPalOrderRequestDto orderRequest = new PayPalOrderRequestDto();
@@ -79,7 +70,6 @@ public class PayPalPaymentGateway implements PaymentGateway {
         order.getOrderItems().forEach(itemOrder -> {
             // // since the order is being BUILT in our backend, we have the actual prices, and therefore we can rely on them.
             // If we were to use the PayPal SDK in Angular, we would have to verify each price coming from the client with the price in DB.
-
             Book book = itemOrder.getBook();
 
             PayPalOrderItemDto payPalOrderItem = new PayPalOrderItemDto();
@@ -88,11 +78,11 @@ public class PayPalPaymentGateway implements PaymentGateway {
             payPalOrderItem.setQuantity("1"); // 'cause it's a digital resource that is acquired in a single unit
 
 
-            PayPalAmountDto paypalUnitAmount = new PayPalAmountDto();
-            paypalUnitAmount.setCurrencyCode(PayPalAmountDto.CurrencyCode.USD);
-            paypalUnitAmount.setValue(itemOrder.getPriceAtPurchase().toString());
+            PayPalAmountDto paypalUnitItemAmount = new PayPalAmountDto();
+            paypalUnitItemAmount.setCurrencyCode(PayPalAmountDto.CurrencyCode.USD);
+            paypalUnitItemAmount.setValue(itemOrder.getPriceAtPurchase().toString());
 
-            payPalOrderItem.setUnitAmount(paypalUnitAmount);
+            payPalOrderItem.setUnitAmount(paypalUnitItemAmount);
             purchaseUnit.getItems().add(payPalOrderItem);
         });
 
@@ -107,6 +97,26 @@ public class PayPalPaymentGateway implements PaymentGateway {
         HttpEntity<PayPalOrderRequestDto> entity = new HttpEntity<>(orderRequest, headers);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<PayPalOrderResponseDto> response = restTemplate.postForEntity(url, entity, PayPalOrderResponseDto.class);
+
+        return response.getBody();
+    }
+
+    // // Capture payment for an order: es 1 POST q efectura el pago?
+    @Override
+    public PayPalOrderPaymentCaptureResponseDto capturePaymentOrder(String orderId) {
+        String url = String.format("%s/v2/checkout/orders/%s/capture", PAYPAL_API_BASE, orderId);
+        String accessToken = getAccessToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        headers.setContentType(MediaType.APPLICATION_JSON); // 'cause body will not be sent, so we need to specify mediaType
+
+
+        // build request
+        HttpEntity<PayPalOrderRequestDto> entity = new HttpEntity<>(null, headers); // body is not necessary
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<PayPalOrderPaymentCaptureResponseDto> response = restTemplate
+                .postForEntity(url, entity, PayPalOrderPaymentCaptureResponseDto.class);
 
         return response.getBody();
     }
