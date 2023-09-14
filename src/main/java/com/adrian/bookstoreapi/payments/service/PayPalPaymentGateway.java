@@ -101,7 +101,7 @@ public class PayPalPaymentGateway implements PaymentGateway {
         return response.getBody();
     }
 
-    // // Capture payment for an order: es 1 POST q efectura el pago?
+    // // Capture payment for an order: POST that does not require a body
     @Override
     public PayPalOrderPaymentCaptureResponseDto capturePaymentOrder(String orderId) {
         String url = String.format("%s/v2/checkout/orders/%s/capture", PAYPAL_API_BASE, orderId);
