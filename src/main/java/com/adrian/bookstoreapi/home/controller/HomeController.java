@@ -6,7 +6,6 @@ import com.adrian.bookstoreapi.home.dto.PaginatedBooksHomeResponseDto;
 import com.adrian.bookstoreapi.home.dto.PaymentOrderRequestDto;
 import com.adrian.bookstoreapi.home.dto.PaymentOrderResponseDto;
 import com.adrian.bookstoreapi.home.service.HomeService;
-import com.adrian.bookstoreapi.payments.dto.PayPalOrderResponseDto;
 import com.adrian.bookstoreapi.storage.service.StorageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -78,5 +77,9 @@ public class HomeController {
         return new ResponseEntity<>(homeService.createPaymentOrder(paymentOrderRequestDto), HttpStatus.CREATED);
     }
 
+    @PostMapping("/checkout/capture-payment")
+    ResponseEntity<?> capturePaymentOrder(@RequestParam String paymentOrderId) {
+        return new ResponseEntity<>(homeService.capturePaymentOrder(paymentOrderId), HttpStatus.CREATED);
+    }
 
 }
