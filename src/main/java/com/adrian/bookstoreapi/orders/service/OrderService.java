@@ -7,4 +7,6 @@ public interface OrderService {
 
     OrderResponseDto create(CreateOrderRequestDto orderRequestDto, String authUserEmail);
 
+    OrderResponseDto findOne(Long id);
+
 }

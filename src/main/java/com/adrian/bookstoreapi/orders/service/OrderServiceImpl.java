@@ -11,6 +11,8 @@ import com.adrian.bookstoreapi.orders.entity.OrderItem;
 import com.adrian.bookstoreapi.orders.repository.OrderItemRepository;
 import com.adrian.bookstoreapi.orders.repository.OrderRepository;
 import com.adrian.bookstoreapi.payments.service.PaymentGateway;
+import com.adrian.bookstoreapi.users.entity.Usuario;
+import com.adrian.bookstoreapi.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -28,12 +30,14 @@ public class OrderServiceImpl implements OrderService {
     private final BookRepository bookRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
 
     @Override
     @Transactional
     public OrderResponseDto create(CreateOrderRequestDto orderRequestDto, String authUserEmail) {
+        Usuario customer = userService.findOneByEmail(authUserEmail);
         Order order = new Order();
 
         // calc total amount
@@ -58,9 +62,18 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderItems(orderItems);
         order.setTotalAmount(totalAmount);
         order.setPaymentStatus(PaymentStatus.PENDING);
+        order.setCustomer(customer);
 
         orderRepository.save(order);
         orderItemRepository.saveAll(orderItems);
+
+        return modelMapper.map(order, OrderResponseDto.class);
+    }
+
+    @Override
+    public OrderResponseDto findOne(Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Order", "ID", id));
 
         return modelMapper.map(order, OrderResponseDto.class);
     }
