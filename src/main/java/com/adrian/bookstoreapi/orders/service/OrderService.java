@@ -9,4 +9,5 @@ public interface OrderService {
 
     OrderResponseDto findOne(Long id);
 
+    Object downloadBookByOrder(Long orderId, Long itemId);
 }

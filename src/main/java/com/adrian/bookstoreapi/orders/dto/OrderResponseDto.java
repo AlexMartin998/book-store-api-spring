@@ -24,6 +24,7 @@ public class OrderResponseDto {
         private Long id;
         private BigDecimal priceAtPurchase;
         private BookResponseDto book;
+        private Integer downloadsAvailable;
     }
 
 }
