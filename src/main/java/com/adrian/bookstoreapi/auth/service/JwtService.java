@@ -1,10 +1,12 @@
 package com.adrian.bookstoreapi.auth.service;
 
+import com.adrian.bookstoreapi.auth.jwt.JwtProperties;
 import com.adrian.bookstoreapi.common.exceptions.BadRequestException;
 import com.adrian.bookstoreapi.common.exceptions.UnauthorizedException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,13 +22,16 @@ import java.util.regex.Pattern;
 
 
 @Service    // transform to a managed @Bean of Spring (Inject)
+@RequiredArgsConstructor
 public class JwtService {
 
-    @Value("${app.security.jwt.secret}")
+    /*@Value("${app.security.jwt.secret}")
     private String SECRET_KEY;  // solo private como modificador de acceso para q no de error
 
     @Value("${app.security.jwt.expiration}")
-    private Long JWT_EXPIRATION_HOURS;
+    private Long JWT_EXPIRATION_HOURS;*/
+
+    private final JwtProperties jwtProperties;
 
 
     public String extractUsername(String jwt) {
@@ -50,7 +55,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())  // payload q se va a codificar (email, uuid, usrname)
                 .setIssuedAt(new Date(System.currentTimeMillis()))    // when this jwt was created - to calculate the expiration date
-                .setExpiration(new Date(System.currentTimeMillis() + (1000L * 60 * 60 * JWT_EXPIRATION_HOURS)))    // setear el tiempo de validez del jwt
+                .setExpiration(new Date(System.currentTimeMillis() + (1000L * 60 * 60 * jwtProperties.getExpiration())))    // setear el tiempo de validez del jwt
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)   // hashcode redomendado
                 .compact();
     }
@@ -117,7 +122,7 @@ public class JwtService {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);   // jwt lo requiere en b64
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecret());   // jwt lo requiere en b64
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
