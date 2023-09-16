@@ -13,4 +13,5 @@ public interface UserService {
 
     PaginatedUsersResponseDto findAll(Pageable pageable);
 
+    Usuario findOne(Long id);
 }

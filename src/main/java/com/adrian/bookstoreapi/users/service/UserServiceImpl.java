@@ -5,6 +5,7 @@ import com.adrian.bookstoreapi.auth.repository.RoleRepository;
 import com.adrian.bookstoreapi.common.constants.RoleConstants;
 import com.adrian.bookstoreapi.common.exceptions.BadRequestException;
 import com.adrian.bookstoreapi.common.exceptions.ResourceNotFoundException;
+import com.adrian.bookstoreapi.common.exceptions.UserNotFoundException;
 import com.adrian.bookstoreapi.users.dto.PaginatedUsersResponseDto;
 import com.adrian.bookstoreapi.users.dto.UserResponseDto;
 import com.adrian.bookstoreapi.users.entity.Usuario;
@@ -68,7 +69,14 @@ public class UserServiceImpl implements UserService {
                 .totalPages(userPage.getTotalPages())
                 .isLastOne(userPage.isLast())
                 .build();
-                
+
+    }
+
+    @Override
+    public Usuario findOne(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> new UserNotFoundException("User not found with ID: ".concat(id.toString()))
+        );
     }
 
 }
