@@ -23,8 +23,22 @@ public class OrderController {
 
     private final OrderService orderService;
 
-
     @GetMapping
+    @Secured(RoleConstants.ADMIN)
+    public ResponseEntity<PaginatedOrdersResponseDto> findAll(
+            @RequestParam(defaultValue = PaginationConstants.DEFAULT_PAGE) int page,
+            @RequestParam(defaultValue = PaginationConstants.DEFAULT_SIZE) int size,
+            @RequestParam(defaultValue = PaginationConstants.DEFAULT_SORT_BY) String sortBy,
+            @RequestParam(defaultValue = PaginationConstants.DEFAULT_SORT_DIR) String sortDir
+    ) {
+        Sort.Direction direction = Sort.Direction.fromString(sortDir);
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return ResponseEntity.ok(orderService.findAll(pageable));
+    }
+
+    @GetMapping("/customer")
     public ResponseEntity<PaginatedOrdersResponseDto> findAllByCustomer(
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_SIZE) int size,

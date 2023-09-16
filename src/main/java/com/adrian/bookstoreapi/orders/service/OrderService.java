@@ -16,4 +16,6 @@ public interface OrderService {
     PaginatedOrdersResponseDto findAllByCustomer(Pageable pageable, String authUserEmail);
 
     OrderResponseDto findOneByCustomer(Long id, Long customerId);
+
+    PaginatedOrdersResponseDto findAll(Pageable pageable);
 }

@@ -139,6 +139,23 @@ public class OrderServiceImpl implements OrderService {
         return modelMapper.map(order, OrderResponseDto.class);
     }
 
+    @Override
+    public PaginatedOrdersResponseDto findAll(Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findAll(pageable);
+        List<OrderResponseDto> orderResponseDtos = orderPage.getContent().stream()
+                .map(order -> modelMapper.map(order, OrderResponseDto.class))
+                .toList();
+
+        return PaginatedOrdersResponseDto.builder()
+                .orders(orderResponseDtos)
+                .pageNumber(orderPage.getNumber())
+                .size(orderPage.getSize())
+                .totalElements(orderPage.getTotalElements())
+                .totalPages(orderPage.getTotalPages())
+                .isLastOne(orderPage.isLast())
+                .build();
+    }
+
 
     private Book findOneBookById(Long bookId) {
         return bookRepository.findById(bookId).orElseThrow(
