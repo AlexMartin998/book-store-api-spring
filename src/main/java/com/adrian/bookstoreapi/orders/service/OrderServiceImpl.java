@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -124,6 +125,18 @@ public class OrderServiceImpl implements OrderService {
                 .totalPages(orderPage.getTotalPages())
                 .isLastOne(orderPage.isLast())
                 .build();
+    }
+
+    @Override
+    public OrderResponseDto findOneByCustomer(Long id, Long customerId) {
+        Order order = findOneById(id);
+        Usuario user = userService.findOne(customerId);
+
+        if (!Objects.equals(order.getCustomer().getId(), customerId))
+            throw new UnauthorizedException("Invalid purchase order for customer with name: "
+                    .concat(user.getFirstname()));
+
+        return modelMapper.map(order, OrderResponseDto.class);
     }
 
 

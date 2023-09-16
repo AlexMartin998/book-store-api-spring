@@ -1,6 +1,7 @@
 package com.adrian.bookstoreapi.orders.controller;
 
 import com.adrian.bookstoreapi.common.constants.PaginationConstants;
+import com.adrian.bookstoreapi.common.constants.RoleConstants;
 import com.adrian.bookstoreapi.orders.dto.OrderResponseDto;
 import com.adrian.bookstoreapi.orders.dto.PaginatedOrdersResponseDto;
 import com.adrian.bookstoreapi.orders.service.OrderService;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -45,8 +47,13 @@ public class OrderController {
         return ResponseEntity.ok(orderService.downloadBookByOrder(orderId, itemId));
     }
 
+    @GetMapping("/{id}/customer/{customerId}")
+    public ResponseEntity<OrderResponseDto> findOneByCustomer(@PathVariable Long id, @PathVariable Long customerId) {
+        return ResponseEntity.ok(orderService.findOneByCustomer(id, customerId));
+    }
 
     @GetMapping("/{id}")
+    @Secured(RoleConstants.ADMIN)
     public ResponseEntity<OrderResponseDto> findOne(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.findOne(id));
     }

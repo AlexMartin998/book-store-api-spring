@@ -14,4 +14,6 @@ public interface OrderService {
     Object downloadBookByOrder(Long orderId, Long itemId);
 
     PaginatedOrdersResponseDto findAllByCustomer(Pageable pageable, String authUserEmail);
+
+    OrderResponseDto findOneByCustomer(Long id, Long customerId);
 }
