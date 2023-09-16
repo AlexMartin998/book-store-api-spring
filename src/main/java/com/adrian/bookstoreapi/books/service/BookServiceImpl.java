@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -104,6 +105,15 @@ public class BookServiceImpl implements BookService {
     @Override
     public boolean existsOneBySlug(String slug) {
         return bookRepository.existsBySlug(slug);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        int updatedRows = bookRepository.markAsDeleted(id);
+        if (updatedRows == 0) throw new ResourceNotFoundException("Book", "ID", id);
+
+        // TODO: delete files
     }
 
 

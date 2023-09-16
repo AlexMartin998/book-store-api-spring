@@ -4,6 +4,7 @@ import com.adrian.bookstoreapi.books.entity.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -20,5 +21,11 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findTop6ByOrderByCreatedAtDesc();
 
     boolean existsBySlug(String slug);
+
+
+    // // soft delete
+    @Modifying
+    @Query("UPDATE Book b SET b.deleted = true, b.active = false WHERE b.id = :id")
+    int markAsDeleted(Long id);
 
 }

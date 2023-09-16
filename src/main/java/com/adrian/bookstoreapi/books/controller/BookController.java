@@ -21,19 +21,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/books")
 @RequiredArgsConstructor
+@Secured(RoleConstants.ADMIN)
 public class BookController {
 
     private final BookService bookService;
 
 
     @PostMapping
-    @Secured(RoleConstants.ADMIN)
+//    @Secured(RoleConstants.ADMIN)
     public ResponseEntity<BookResponseDto> create(@Valid @RequestBody BookRequestDto bookRequestDto) {
         return new ResponseEntity<>(bookService.create(bookRequestDto), HttpStatus.CREATED);
     }
 
     @GetMapping
-    @Secured(RoleConstants.ADMIN)
+//    @Secured(RoleConstants.ADMIN)
     public ResponseEntity<PaginatedBooksResponseDto> getAllBooks(
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_PAGE) int page,
             @RequestParam(defaultValue = PaginationConstants.DEFAULT_SIZE) int size,
@@ -48,27 +49,34 @@ public class BookController {
     }
 
     @GetMapping("/slug/{slug}")
-    @Secured(RoleConstants.ADMIN)
+//    @Secured(RoleConstants.ADMIN)
     public ResponseEntity<BookResponseDto> findOneBySlug(@PathVariable String slug) {
         return ResponseEntity.ok(bookService.findOneBySlug(slug));
     }
 
     @GetMapping("/availability/slug/{slug}")
-    @Secured(RoleConstants.ADMIN)
+//    @Secured(RoleConstants.ADMIN)
     public ResponseEntity<Boolean> checkSlugAvailability(@PathVariable String slug) {
         return ResponseEntity.ok(bookService.existsOneBySlug(slug));
     }
 
     @GetMapping("/{id}")
-    @Secured(RoleConstants.ADMIN)
+//    @Secured(RoleConstants.ADMIN)
     public ResponseEntity<BookResponseDto> findOne(@PathVariable Long id) {
         return ResponseEntity.ok(bookService.findOne(id));
     }
 
     @PatchMapping("/{id}")
-    @Secured(RoleConstants.ADMIN)
+//    @Secured(RoleConstants.ADMIN)
     public ResponseEntity<BookResponseDto> update(@PathVariable Long id, @Valid @RequestBody BookUPDRequestDto bookUPDRequestDto) {
         return ResponseEntity.ok(bookService.update(id, bookUPDRequestDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        bookService.delete(id);
+
+        return ResponseEntity.ok(null);
     }
 
 }

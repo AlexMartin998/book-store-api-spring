@@ -24,4 +24,5 @@ public interface BookService {
 
     boolean existsOneBySlug(String slug);
 
+    void delete(Long id);
 }
