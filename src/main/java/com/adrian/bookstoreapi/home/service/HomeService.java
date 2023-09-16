@@ -16,7 +16,7 @@ public interface HomeService {
 
     List<BookHomeResponseDto> findLatestBooks();
 
-    PaymentOrderResponseDto createPaymentOrder(PaymentOrderRequestDto paymentOrderRequestDto);
+    PaymentOrderResponseDto createPaymentOrder(PaymentOrderRequestDto paymentOrderRequestDto, String authUserEmail);
 
     Object capturePaymentOrder(String paymentOrderId, String customerEmail);
 }

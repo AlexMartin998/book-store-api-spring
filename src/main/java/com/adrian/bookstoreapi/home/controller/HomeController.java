@@ -16,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -72,9 +74,13 @@ public class HomeController {
     // // checkout: free 'cause login is not necessary to buy a book
     // create purchase order
     @PostMapping("/checkout/payment-order")
-    ResponseEntity<PaymentOrderResponseDto> createPaymentOrder(@Valid @RequestBody PaymentOrderRequestDto paymentOrderRequestDto) {
+    ResponseEntity<PaymentOrderResponseDto> createPaymentOrder(
+            @Valid @RequestBody PaymentOrderRequestDto paymentOrderRequestDto,
+            Authentication authentication
+    ) {
+        String authUserEmail = ((UserDetails) authentication.getPrincipal()).getUsername();
 
-        return new ResponseEntity<>(homeService.createPaymentOrder(paymentOrderRequestDto), HttpStatus.CREATED);
+        return new ResponseEntity<>(homeService.createPaymentOrder(paymentOrderRequestDto, authUserEmail), HttpStatus.CREATED);
     }
 
     @PostMapping("/checkout/capture-payment")

@@ -61,10 +61,10 @@ public class HomeServiceImpl implements HomeService {
 
     @Override
     @Transactional
-    public PaymentOrderResponseDto createPaymentOrder(PaymentOrderRequestDto paymentOrderRequestDto) {
+    public PaymentOrderResponseDto createPaymentOrder(PaymentOrderRequestDto paymentOrderRequestDto, String authUserEmail) {
         OrderResponseDto orderResponseDto = orderService.create(
                 modelMapper.map(paymentOrderRequestDto, CreateOrderRequestDto.class),
-                "alex3@demo.com"); // TODO: req auth to buy a book
+                authUserEmail);
 
         PayPalOrderResponseDto paypalPaymentOrder = (PayPalOrderResponseDto) paymentGateway.createOrder(
                 modelMapper.map(orderResponseDto, Order.class),
