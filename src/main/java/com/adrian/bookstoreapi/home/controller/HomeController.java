@@ -79,7 +79,7 @@ public class HomeController {
 
     @PostMapping("/checkout/capture-payment")
     ResponseEntity<?> capturePaymentOrder(@RequestParam String paymentOrderId) {
-        return new ResponseEntity<>(homeService.capturePaymentOrder(paymentOrderId), HttpStatus.CREATED);
+        return new ResponseEntity<>(homeService.capturePaymentOrder(paymentOrderId, "alex3@demo.com"), HttpStatus.CREATED);
     }
 
 }

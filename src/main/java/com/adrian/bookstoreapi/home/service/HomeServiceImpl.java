@@ -19,6 +19,7 @@ import com.adrian.bookstoreapi.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,7 +85,7 @@ public class HomeServiceImpl implements HomeService {
 
     @Override
     @Transactional
-    public Object capturePaymentOrder(String paymentOrderId) {
+    public Object capturePaymentOrder(String paymentOrderId, String customerEmail) {
         PayPalOrderPaymentCaptureResponseDto orderPaymentCaptureDto =
                 (PayPalOrderPaymentCaptureResponseDto) paymentGateway
                         .capturePaymentOrder(paymentOrderId);

@@ -18,5 +18,5 @@ public interface HomeService {
 
     PaymentOrderResponseDto createPaymentOrder(PaymentOrderRequestDto paymentOrderRequestDto);
 
-    Object capturePaymentOrder(String paymentOrderId);
+    Object capturePaymentOrder(String paymentOrderId, String customerEmail);
 }

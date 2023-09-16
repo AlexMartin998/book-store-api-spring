@@ -9,6 +9,7 @@ import com.adrian.bookstoreapi.common.exceptions.ResourceNotFoundException;
 import com.adrian.bookstoreapi.common.exceptions.UnauthorizedException;
 import com.adrian.bookstoreapi.orders.dto.CreateOrderRequestDto;
 import com.adrian.bookstoreapi.orders.dto.OrderResponseDto;
+import com.adrian.bookstoreapi.orders.dto.PaginatedOrdersResponseDto;
 import com.adrian.bookstoreapi.orders.entity.Order;
 import com.adrian.bookstoreapi.orders.entity.OrderItem;
 import com.adrian.bookstoreapi.orders.repository.OrderItemRepository;
@@ -20,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,6 +107,23 @@ public class OrderServiceImpl implements OrderService {
 
         // serve book
         return storageService.loadAsResource(orderItem.getBook().getFilePath());
+    }
+
+    @Override
+    public PaginatedOrdersResponseDto findAllByCustomer(Pageable pageable, String authUserEmail) {
+        Page<Order> orderPage = orderRepository.findAllByCustomerEmail(pageable, authUserEmail);
+        List<OrderResponseDto> orderResponseDtos = orderPage.getContent().stream()
+                .map(order -> modelMapper.map(order, OrderResponseDto.class))
+                .toList();
+
+        return PaginatedOrdersResponseDto.builder()
+                .orders(orderResponseDtos)
+                .pageNumber(orderPage.getNumber())
+                .size(orderPage.getSize())
+                .totalElements(orderPage.getTotalElements())
+                .totalPages(orderPage.getTotalPages())
+                .isLastOne(orderPage.isLast())
+                .build();
     }
 
 
