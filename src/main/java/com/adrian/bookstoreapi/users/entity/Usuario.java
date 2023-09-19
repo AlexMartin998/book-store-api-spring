@@ -29,6 +29,7 @@ public class Usuario {
     private boolean deleted = false;
 
     private String password;
+    @Column(updatable = false)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
