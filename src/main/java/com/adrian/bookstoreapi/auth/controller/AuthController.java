@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -38,6 +40,11 @@ public class AuthController {
         String authUserEmail = ((UserDetails) authentication.getPrincipal()).getUsername();
 
         return ResponseEntity.ok(authService.renewJwt(authUserEmail));
+    }
+
+    @GetMapping("/roles")
+    public ResponseEntity<List<AuthResponseDto.RoleDto>> findAllRoles() {
+        return ResponseEntity.ok(authService.findAllRoles());
     }
 
 }

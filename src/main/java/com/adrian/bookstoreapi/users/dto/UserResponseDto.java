@@ -11,6 +11,7 @@ public class UserResponseDto {
     private String firstname;
     private String lastname;
     private String email;
+    private boolean deleted;
     private AuthResponseDto.RoleDto role;
 
 }
